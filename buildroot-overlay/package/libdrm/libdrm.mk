@@ -16,6 +16,7 @@ LIBDRM_DEPENDENCIES = \
 	host-pkgconf
 
 LIBDRM_CONF_OPTS = \
+	--default-library=both \
 	-Dcairo-tests=disabled \
 	-Dman-pages=disabled \
 	-Dtests=true
