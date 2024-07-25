@@ -1,0 +1,64 @@
+From 229b8ec85acb7cef9850e6f51943a54d2c0f7d00 Mon Sep 17 00:00:00 2001
+From: U2FsdGVkX1 <U2FsdGVkX1@gmail.com>
+Date: Thu, 25 Jul 2024 17:30:30 +0800
+Subject: [PATCH] add more memory infomation
+
+---
+ src/core/lv_refr.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
+
+diff --git a/lvgl.src/core/lv_refr.c b/lvgl/src/core/lv_refr.c
+index 3728a3979..300132f5f 100644
+--- a/lvgl/src/core/lv_refr.c
++++ b/lvgl/src/core/lv_refr.c
+@@ -9,6 +9,7 @@
+ #include <stddef.h>
+ #include <stdio.h>
+ #include <sys/time.h>
++#include <sys/sysinfo.h>
+ #include "lv_refr.h"
+ #include "lv_disp.h"
+ #include "../hal/lv_hal_tick.h"
+@@ -448,6 +449,7 @@ void _lv_disp_refr_timer(lv_timer_t * tmr)
+ 
+ #if LV_USE_MEM_MONITOR && LV_MEM_CUSTOM == 0 && LV_USE_LABEL
+     lv_obj_t * mem_label = mem_monitor.mem_label;
++    static char kernelsize[256] = {0};
+     if(mem_label == NULL) {
+         mem_label = lv_label_create(lv_layer_sys());
+         lv_obj_set_style_bg_opa(mem_label, LV_OPA_50, 0);
+@@ -460,20 +462,22 @@ void _lv_disp_refr_timer(lv_timer_t * tmr)
+         lv_label_set_text(mem_label, "?");
+         lv_obj_align(mem_label, LV_USE_MEM_MONITOR_POS, 0, 0);
+         mem_monitor.mem_label = mem_label;
++
++        FILE *fp = popen("dmesg | grep -Eo '[0-9]+K kernel code, [0-9]+K rwdata, [0-9]+K rodata' | tr '\n' ' '", "r");
++        fgets(kernelsize, sizeof(kernelsize), fp);
+     }
+ 
+     if(lv_tick_elaps(mem_monitor.mem_last_time) > 300) {
+         mem_monitor.mem_last_time = lv_tick_get();
+-        lv_mem_monitor_t mon;
+-        lv_mem_monitor(&mon);
+-        uint32_t used_size = mon.total_size - mon.free_size;;
+-        uint32_t used_kb = used_size / 1024;
+-        uint32_t used_kb_tenth = (used_size - (used_kb * 1024)) / 102;
++        struct sysinfo info;
++        sysinfo(&info);
++        long total_memory = info.totalram * info.mem_unit;
++        long free_memory = info.freeram * info.mem_unit;
++        long used_memory = total_memory - free_memory;
+         lv_label_set_text_fmt(mem_label,
+-                              "%"LV_PRIu32 ".%"LV_PRIu32 " kB used (%d %%)\n"
+-                              "%d%% frag.",
+-                              used_kb, used_kb_tenth, mon.used_pct,
+-                              mon.frag_pct);
++                              "%lu MB used\n%s",
++                              used_memory / 1024 / 1024,
++                              kernelsize);
+     }
+ #endif
+ 
+-- 
+2.45.2
+
