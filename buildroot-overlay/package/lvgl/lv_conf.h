@@ -162,7 +162,9 @@ extern uint32_t custom_tick_get(void);
 /*-------------
  * GPU
  *-----------*/
-
+#if defined(__riscv_xlen) &&  (__riscv_xlen == 32)
+#define LV_USE_GPU_CSI2D 1
+#endif
 /*Use STM32's DMA2D (aka Chrom Art) GPU*/
 #define LV_USE_GPU_STM32_DMA2D 0
 #if LV_USE_GPU_STM32_DMA2D
