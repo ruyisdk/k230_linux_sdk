@@ -129,7 +129,6 @@ int main(void)
     disp_drv.flush_cb   = drm_flush;
     disp_drv.hor_res    = lcd_w;
     disp_drv.ver_res    = lcd_h;
-    disp_drv.screen_transp = 1;
     disp_drv.full_refresh = 1;
     #if DRM_DIRECT_BUFFER
     disp_drv.direct_mode = 1;

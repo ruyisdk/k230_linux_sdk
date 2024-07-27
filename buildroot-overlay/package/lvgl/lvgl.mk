@@ -12,7 +12,7 @@ LVGL_CFLAG = -I$(STAGING_DIR)/usr/include/libdrm
 
 ifeq ($(BR2_RISCV_32), y)
 LVGL_CFLAG += -march=rv32gcv_xtheadc
-LVGL_LDFLAG += -march=rv32gcv_xtheadc
+LVGL_LDFLAG += -march=rv32gcv_xtheadc -lcsi2d -L.
 endif
 
 define LVGL_EXTRACT_CMDS
@@ -27,6 +27,7 @@ endef
 
 define LVGL_INSTALL_TARGET_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE) DESTDIR="$(TARGET_DIR)" -C $(@D) install
+	install $(@D)/libcsi2d.so $(TARGET_DIR)/usr/lib
 endef
 
 $(eval $(generic-package))
