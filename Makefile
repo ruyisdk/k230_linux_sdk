@@ -29,7 +29,7 @@ dl:   $(BRW_BUILD_DIR)/.config
 .PHONY:help
 help:sync
 	@echo "sdk build usage:"
-	@echo "   make CONF=k230_canmv_defconfig  -build k230 linux sdk user k230_canmv_defconfig config "
+	@echo "   make CONF=k230_canmv_ilp32_defconfig  -build k230 linux sdk user k230_canmv_ilp32_defconfig config "
 	@[ -d $(BR_SRC_DIR) ] && echo "buildroot usage:" || exit 0
 	@[ -d $(BR_SRC_DIR) ] && make --no-print-directory -C $(BR_SRC_DIR)  help  || exit 0
 	@echo "make uboot-rebuild #rebuild uboot"
@@ -37,7 +37,7 @@ help:sync
 	@echo "make linux-rebuild opensbi-rebuild #rebuild linux,rebuild opensbi"
 	@echo "make linux-dirclean #linux clean"
 	@echo "sdk build usage:"
-	@echo "    make CONF=k230_canmv_defconfig    -build k230 linux sdk user k230_canmv_defconfig"
+	@echo "    make CONF=k230_canmv_ilp32_defconfig    -build k230 linux sdk user k230_canmv_ilp32_defconfig"
 	@echo "                                      -CONF can be $$(ls $(BR_OVERLAY_DIR)/configs | tr '\n' '/')"
 	@echo "dcoker build and run example:"
 	@echo "		docker  build   -f tools/docker/Dockerfile  -t wjx/d tools/docker "
