@@ -1,18 +1,25 @@
 # K230 Linux SDK
 
->This document uses the k230d_canmv_defconfig configuration as an example. If you use other configurations, replace k230d_canmv_defconfig with correct names. All the configurations supported by this sdk,  can be found in  buildroot-overlay/configs directory.
+Compared with CanMV K230, the memory of Canaan K230D AIoT chip has been changed from K230's external 256MB/512MB to internal 128MB. The software memory overhead of K230 based on 64LP64 ABI is too large, and Xuantie's 64ILP32 technology can simultaneously improve the storage density of memory and cache, and can play a greater performance advantage in memory, taking into account both cost and performance.
 
-## Install toolchain and dependencies
+Based on the SDK of K230 64LP64 ABI, K230D Linux SDK adds the SDK of 64ILP32 ABI, which can support the construction of 64ILP32 and 64LP64 systems. After preliminary performance comparison, the memory overhead of the 64ILP32 RuyiSDK has decreased by 30%, and the traversal performance of Doubly linked list has increased by 20%. The SDK provides relevant kernel module files.
 
-download  Xuantie-900-gcc-linux-6.6.0-glibc-x86_64-V2.10.1-20240712.tar.gz toolchan from  `https://www.xrvm.cn/community/download?id=4333581795569242112`
-uncompress the toolchain to the /opt/toolchain(Refer command):
+![K230D-Zero](image/K230D-Zero.jpg)
+
+> This document uses the k230d_canmv_ilp32_defconfig configuration as an example. If you use other configurations, replace k230d_canmv_ilp32_defconfig with correct names. All the configurations supported by this SDK,  can be found in  buildroot-overlay/configs directory.
+
+## Build Preparation
+
+1. Download the toolchain:
+
+download  `Xuantie-900-gcc-linux-6.6.0-glibc-x86_64-V2.10.1-20240712.tar.gz` toolchain from  `https://www.xrvm.cn/community/download?id=4333581795569242112` and uncompress the toolchain to the `/opt/toolchain` :
 
 ```bash
-mkdir -p /opt/toolchain;
-tar -zxvf Xuantie-900-gcc-linux-6.6.0-glibc-x86_64-V2.10.1-20240712.tar.gz -C /opt/toolchain;
+mkdir -p /opt/toolchain
+tar -zxvf Xuantie-900-gcc-linux-6.6.0-glibc-x86_64-V2.10.1-20240712.tar.gz -C /opt/toolchain
 ```
 
-install dependencies(Refer command):
+2. Install dependencies:
 
 ```bash
 apt-get install -y   git sed make binutils build-essential diffutils gcc  g++ bash patch gzip \
@@ -20,61 +27,54 @@ apt-get install -y   git sed make binutils build-essential diffutils gcc  g++ ba
         libssl-dev gawk cmake bison flex  bash-completion
 ```
 
->k230d_canmv_ilp32_defconfig required  ubuntu 22.04 or 24.04 and install rv64ilp32 toolchain(refer command):
->
->`wget -c https://github.com/ruyisdk/riscv-gnu-toolchain-rv64ilp32/releases/download/2024.06.25/riscv64ilp32-elf-ubuntu-22.04-gcc-nightly-2024.06.25-nightly.tar.gz;`
->
->`mkdir -p /opt/toolchain/riscv64ilp32-elf-ubuntu-22.04-gcc-nightly-2024.06.25/;`
-》
->`tar -xvf riscv64ilp32-elf-ubuntu-22.04-gcc-nightly-2024.06.25-nightly.tar.gz   -C /opt/toolchain/riscv64ilp32-elf-ubuntu-22.04-gcc-nightly-2024.06.25/;`
+3. Prepare a dedicated toolchain `riscv-gnu-toolchain-rv64ilp32` toolchain for 64ILP32 builds:
 
-## build
+> k230d_canmv_ilp32_defconfig required  ubuntu 22.04 or 24.04 and install rv64ilp32 toolchain:
 
 ```bash
-
-make CONF=k230d_canmv_defconfig #build k230d canmv image (kernel and rootfs both 64bit);
-# make CONF=k230_canmv_defconfig # build k230 canmv image
-# make CONF=k230d_canmv_ilp32_defconfig  #build k230d canmv 32bit rootfs;
-# make help # view help
+wget -c https://github.com/ruyisdk/riscv-gnu-toolchain-rv64ilp32/releases/download/2024.06.25/riscv64ilp32-elf-ubuntu-22.04-gcc-nightly-2024.06.25-nightly.tar.gz
+mkdir -p /opt/toolchain/riscv64ilp32-elf-ubuntu-22.04-gcc-nightly-2024.06.25/
+tar -xvf riscv64ilp32-elf-ubuntu-22.04-gcc-nightly-2024.06.25-nightly.tar.gz -C /opt/toolchain/riscv64ilp32-elf-ubuntu-22.04-gcc-nightly-2024.06.25/
 ```
 
->[BR2_PRIMARY_SIT configuration primary download site]("https://bootlin.com/pub/conferences/2011/elce/using-buildroot-real-project/using-buildroot-real-project.pdf") for example: `make CONF=k230d_canmv_defconfig  BR2_PRIMARY_SITE=https://ai.b-bug.org/~/wangjianxin/dl/`
+## Build
+
+Before building, please download or clone the source code of this repository:
+
+```bash
+git clone https://github.com/ruyisdk/k230_linux_sdk.git
+cd k230_linux_sdk
+```
+
+Build 64ILP32 ：
+
+```bash
+#build k230d canmv (64ilp32 kernel and 32bit rootfs)
+make CONF=k230d_canmv_ilp32_defconfig
+```
+
+Build 64LP64 ：
+
+```bash
+#build k230d canmv image (64lp64 kernel and 64bit rootfs)
+make CONF=k230d_canmv_lp64_defconfig 
+```
+
+> you can execute the `make help` command to view help
+
 
 ## output
 
-```bash
-output/k230d_canmv_defconfig/images/sysimage-sdcard.img.gz
-```
-
->Note that k230d_canmv_defconfig is an example and needs to be replaced with the correct name
->uncompress file , [burn to tf card]("https://gitee.com/kendryte/k230_docs/blob/main/zh/01_software/board/K230_SDK_%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E.md#51-sd%E5%8D%A1%E9%95%9C%E5%83%8F%E7%83%A7%E5%BD%95"),insert  tf to device, poweron device.
-
-## uboot
+The build output is in the `output` directory, and is stored separately according to the executed defconfig. The image file paths for 64ILP32 and 64LP64 are:
 
 ```bash
-make uboot-rebuild #rebuild uboot
-make uboot-dirclean #uboot clean
-#uboot directory description
-buildroot-overlay/boot/uboot/u-boot-2022.10-overlay/  #uboot overlay code
-output/k230d_canmv_defconfig/build/uboot-2022.10/ #uboot full code,uboot build dir
+# 64ILP32
+output/k230d_canmv_ilp32_defconfig/images/sysimage-sdcard.img.gz
+
+# 64LP64
+output/k230d_canmv_lp64_defconfig/images/sysimage-sdcard.img.gz
 ```
 
-## linux
+After getting the image,please uncompress file , [burn to tf card](https://developer.canaan-creative.com/k230/zh/main/CanMV_K230_%E6%95%99%E7%A8%8B.html#id11),insert tf to device, and poweron device to start using it.
 
-```bash
-make linux-menuconfig #modify configuration
-make linux-savedefconfig #save to defconfig
-
-make linux-rebuild  #rebuild linux
-make linux-dirclean #linux clean
-```
-
->linux source code can be specified using the LINUX_OVERRIDE_SRCDIR macro,for example:
->echo LINUX_OVERRIDE_SRCDIR=/home/wangjianxin/t/linux-xuantie-kernel >output/k230d_canmv_defconfig/local.mk
-
-## buildroot
-
-```bash
-make menuconfig #buildroot(sdk) modify configuration
-make savedefconfig #buildroot(sdk) savedefconfig
-```
+For more SDK usage instructions, please refer to the upstream [kendryte k230_linux_sdk](https://github.com/kendryte/k230_linux_sdk) repository instructions.
