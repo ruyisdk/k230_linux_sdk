@@ -6,7 +6,7 @@ BR_OVERLAY_DIR = buildroot-overlay
 ifeq ("$(origin CONF)", "command line")
 $(shell echo CONF=$(CONF)>.last_conf;)
 else
-$(shell [ -f .last_conf ] || ( echo CONF=k230_canmv_defconfig>.last_conf;) )
+$(shell [ -f .last_conf ] || ( echo CONF=k230d_canmv_ilp32_defconfig>.last_conf;) )
 endif
 include .last_conf
 BRW_BUILD_DIR = $(CURDIR)/output/$(CONF)
