@@ -30,4 +30,12 @@ define LVGL_INSTALL_TARGET_CMDS
 	install $(@D)/libcsi2d.so $(TARGET_DIR)/usr/lib
 endef
 
+define LVGL_AUTORUN
+	if ! grep -q lvgl_demo_music $(TARGET_DIR)/etc/inittab; then \
+		echo "::sysinit:start-stop-daemon -S -b -x /usr/bin/lvgl_demo_music" >> $(TARGET_DIR)/etc/inittab; \
+	fi
+endef
+
+LVGL_TARGET_FINALIZE_HOOKS += LVGL_AUTORUN
+
 $(eval $(generic-package))
