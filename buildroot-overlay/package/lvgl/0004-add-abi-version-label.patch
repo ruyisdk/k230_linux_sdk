@@ -1,0 +1,54 @@
+From 7a9143de9137b43e2899d13e84dec78ee867d891 Mon Sep 17 00:00:00 2001
+From: U2FsdGVkX1 <U2FsdGVkX1@gmail.com>
+Date: Tue, 30 Jul 2024 10:37:01 +0800
+Subject: [PATCH] add abi version label
+
+---
+ src/core/lv_refr.c | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/lvgl/src/core/lv_refr.c b/lvgl/src/core/lv_refr.c
+index ac5bb9508..4867f16e1 100644
+--- a/lvgl/src/core/lv_refr.c
++++ b/lvgl/src/core/lv_refr.c
+@@ -8,6 +8,7 @@
+  *********************/
+ #include <stddef.h>
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <sys/time.h>
+ #include <sys/sysinfo.h>
+ #include "lv_refr.h"
+@@ -406,10 +407,28 @@ void _lv_disp_refr_timer(lv_timer_t * tmr)
+         lv_obj_set_style_pad_bottom(perf_label, 3, 0);
+         lv_obj_set_style_pad_left(perf_label, 3, 0);
+         lv_obj_set_style_pad_right(perf_label, 3, 0);
+-        lv_obj_set_style_text_align(perf_label, LV_TEXT_ALIGN_RIGHT, 0);
+         lv_label_set_text(perf_label, "?");
+         lv_obj_align(perf_label, LV_USE_PERF_MONITOR_POS, 0, 0);
+         perf_monitor.perf_label = perf_label;
++
++        lv_obj_t * version_label = lv_label_create(lv_layer_sys());
++        lv_obj_add_style(version_label, &style, 0);
++        lv_obj_set_style_bg_opa(version_label, LV_OPA_50, 0);
++        lv_obj_set_style_bg_color(version_label, lv_color_black(), 0);
++        lv_obj_set_style_text_color(version_label, lv_color_white(), 0);
++        lv_obj_set_style_pad_top(version_label, 3, 0);
++        lv_obj_set_style_pad_bottom(version_label, 3, 0);
++        lv_obj_set_style_pad_left(version_label, 3, 0);
++        lv_obj_set_style_pad_right(version_label, 3, 0);
++        lv_obj_set_style_text_align(version_label, LV_TEXT_ALIGN_RIGHT, 0);
++        lv_obj_align(version_label, LV_ALIGN_TOP_RIGHT, 0, 0);
++        if(!system("zcat /proc/config.gz | grep -q CONFIG_ARCH_RV64ILP32")) {
++            lv_label_set_text(version_label, "RV64ILP32");
++        } else if (!system("zcat /proc/config.gz | grep -q CONFIG_ARCH_RV64I")) {
++            lv_label_set_text(version_label, "RV64");
++        } else {
++            lv_label_set_text(version_label, "RV32");
++        }
+     }
+ 
+     if(lv_tick_elaps(perf_monitor.perf_last_time) < 300) {
+-- 
+2.45.2
+

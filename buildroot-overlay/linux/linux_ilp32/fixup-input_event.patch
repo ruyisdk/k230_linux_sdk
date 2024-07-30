@@ -1,0 +1,37 @@
+From 0d0b68c6404a33c57a7a4c34c5d1cc8eb3dee2c6 Mon Sep 17 00:00:00 2001
+From: Guo Ren <guoren@linux.alibaba.com>
+Date: Mon, 29 Jul 2024 22:12:19 -0400
+Subject: [PATCH] riscv: input: Fixup input_event
+
+RISC-V treat input_event as 24 Bytes in userspace, so adjust the
+time value data type to match the requirement.
+
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Signed-off-by: Guo Ren <guoren@kernel.org>
+---
+ include/uapi/linux/input.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/include/uapi/linux/input.h b/include/uapi/linux/input.h
+index 2557eb7b05617..330fea0a62959 100644
+--- a/include/uapi/linux/input.h
++++ b/include/uapi/linux/input.h
+@@ -30,6 +30,10 @@ struct input_event {
+ 	struct timeval time;
+ #define input_event_sec time.tv_sec
+ #define input_event_usec time.tv_usec
++#else
++#if defined(__riscv)
++	__kernel_time64_t __sec;
++	__kernel_time64_t __usec;
+ #else
+ 	__kernel_ulong_t __sec;
+ #if defined(__sparc__) && defined(__arch64__)
+@@ -38,6 +42,7 @@ struct input_event {
+ #else
+ 	__kernel_ulong_t __usec;
+ #endif
++#endif
+ #define input_event_sec  __sec
+ #define input_event_usec __usec
+ #endif
