@@ -7,7 +7,7 @@ Subject: [PATCH] add more memory infomation
  src/core/lv_refr.c | 22 +++++++++++++---------
  1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/lvgl.src/core/lv_refr.c b/lvgl/src/core/lv_refr.c
+diff --git a/lvgl/src/core/lv_refr.c b/lvgl/src/core/lv_refr.c
 index 3728a3979..300132f5f 100644
 --- a/lvgl/src/core/lv_refr.c
 +++ b/lvgl/src/core/lv_refr.c
