@@ -1,4 +1,4 @@
-From d9923a1d55610b89163a0131a23126802e88c136 Mon Sep 17 00:00:00 2001
+From 8674fbb3056c91e636d3dcc63080c78076ae1ff1 Mon Sep 17 00:00:00 2001
 From: abing <abing@linux.alibaba.com>
 Date: Fri, 26 Jul 2024 16:38:14 +0800
 Subject: [PATCH] add csi2d support for rvv accelerateion
@@ -416,16 +416,16 @@ index 000000000..556536494
 +        /*Handle opa and mask values too*/
 +        else {
 +            for(y = 0; y < h; y++) {
-+                for(x = 0; x < w; x++) {
 +#if LV_COLOR_DEPTH == 32
-+                    csi_2d_argb8888_copy_with_mask_with_opacity_row((uint32_t*)dest_buf, (uint32_t*)src_buf, (uint8_t*)mask, opa, w);
++                csi_2d_argb8888_copy_with_mask_with_opacity_row((uint32_t*)dest_buf, (uint32_t*)src_buf, (uint8_t*)mask, opa, w);
 +#else
++                for(x = 0; x < w; x++) {
 +                    if(mask[x]) {
 +                        lv_opa_t opa_tmp = mask[x] >= LV_OPA_MAX ? opa : ((opa * mask[x]) >> 8);
 +                        dest_buf[x] = lv_color_mix(src_buf[x], dest_buf[x], opa_tmp);
 +                    }
-+#endif
 +                }
++#endif
 +                dest_buf += dest_stride;
 +                src_buf += src_stride;
 +                mask += mask_stride;
