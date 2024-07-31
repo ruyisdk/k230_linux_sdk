@@ -40,11 +40,11 @@ index ac5bb9508..4867f16e1 100644
 +        lv_obj_set_style_text_align(version_label, LV_TEXT_ALIGN_RIGHT, 0);
 +        lv_obj_align(version_label, LV_ALIGN_TOP_RIGHT, 0, 0);
 +        if(!system("zcat /proc/config.gz | grep -q CONFIG_ARCH_RV64ILP32=y")) {
-+            lv_label_set_text(version_label, "RV64ILP32");
++            lv_label_set_text(version_label, "kernel: s64ilp32\nrootfs: u32ilp32");
 +        } else if (!system("zcat /proc/config.gz | grep -q CONFIG_ARCH_RV64I=y")) {
-+            lv_label_set_text(version_label, "RV64");
++            lv_label_set_text(version_label, "kernel: s64lp64\nrootfs: u64lp64");
 +        } else {
-+            lv_label_set_text(version_label, "RV32");
++            lv_label_set_text(version_label, "kernel: s32ilp32\nrootfs: u32ilp32");
 +        }
      }
  
