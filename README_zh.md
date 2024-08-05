@@ -4,9 +4,14 @@
 
 K230D Linux SDK 在 K230 64LP64 ABI 的 SDK 基础上，增加了 64ILP32 ABI 的 SDK，可以支持构建 64ILP32 和 64LP64 两种系统。经过初步的性能对比，新32位 RuyiSDK 内存开销下降 30%，同时双向链表的遍历性能提升 20%，SDK中给出了相关的内核模块文件。
 
-![K230D-Zero](image/K230D-Zero.jpg)
+在刚举办的 RISC-V Day Tokyo 2024 Summer 上，我们展示了这一开源工作成果并与大家交流，64ILP32 有效降低内存开销并提升缓存性能，这可以提高已大量上市的 RV64 小内存芯片的产品竞争力。
 
-本文档以 k230d_canmv_ilp32_defconfig 配置为例，如果使用其他配置，请将 k230d_canmv_ilp32_defconfig 替换为正确的名称。此 SDK 支持的所有配置，都可以在 buildroot-overlay/configs 目录中找到。
+![](image/1.jpg)
+![](image/2.jpg)
+
+> 请优先使用 [预编译镜像](https://github.com/ruyisdk/k230_linux_sdk/releases)
+
+> 本文档以 k230d_canmv_ilp32_defconfig 配置为例，如果使用其他配置，请将 k230d_canmv_ilp32_defconfig 替换为正确的名称。此 SDK 支持的所有配置，都可以在 buildroot-overlay/configs 目录中找到。
 
 ## 构建准备
 

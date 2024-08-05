@@ -4,7 +4,12 @@ Compared with CanMV K230, the memory of Canaan K230D AIoT chip has been changed 
 
 Based on the SDK of K230 64LP64 ABI, K230D Linux SDK adds the SDK of 64ILP32 ABI, which can support the construction of 64ILP32 and 64LP64 systems. After preliminary performance comparison, the memory overhead of the 64ILP32 RuyiSDK has decreased by 30%, and the traversal performance of Doubly linked list has increased by 20%. The SDK provides relevant kernel module files.
 
-![K230D-Zero](image/K230D-Zero.jpg)
+At the recently held RISC-V Day Tokyo 2024 Summer, we showcased this open-source work and engaged with the community. 64ILP32 effectively reduces memory overhead and enhances cache performance, which can improve the product competitiveness of the widely available RV64 small-memory chips.
+
+![](image/1.jpg)
+![](image/2.jpg)
+
+> You can find the pre-built images in the [release](https://github.com/ruyisdk/k230_linux_sdk/releases)
 
 > This document uses the k230d_canmv_ilp32_defconfig configuration as an example. If you use other configurations, replace k230d_canmv_ilp32_defconfig with correct names. All the configurations supported by this SDK,  can be found in  buildroot-overlay/configs directory.
 
