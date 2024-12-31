@@ -21,7 +21,7 @@ K230D Linux SDK 在 K230 64LP64 ABI 的 SDK 基础上，增加了 64ILP32 ABI �
 
 ```bash
 mkdir -p /opt/toolchain
-tar -zxvf Xuantie-900-gcc-linux-6.6.0-glibc-x86_64-V2.10.1-20240712.tar.gz-C/opt/toolchain
+tar -zxvf Xuantie-900-gcc-linux-6.6.0-glibc-x86_64-V2.10.1-20240712.tar.gz -C /opt/toolchain
 ```
 
 2. 安装依赖项：
